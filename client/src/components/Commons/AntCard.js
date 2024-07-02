@@ -10,7 +10,6 @@ const AntCard = (props) => {
     return (
       // 영역 중 4칸을 씀
       // <Col span={4}>
-
       // 가로 크기에 따라 영역 설정
       <Col lg={4} md={6} sm={12} xs={24}>
         <Card
