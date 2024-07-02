@@ -1,78 +1,10 @@
-// import React, { useEffect, useState } from 'react';
-// import { API_URL, API_KEY, IMAGE_BASE_URL } from '../Config'
-// import MainImage from './Section/MainImage';
-// import { Row } from 'antd';
-// import GridCards from '../Commons/GridCards';
-
-
-// function LandingPage() {
-
-//   const [Movies, setMovies] = useState([]);
-//   const [MainMovieImage, setMainMovieImage] = useState(null);
-
-//   useEffect(() => {
-//     const endpoint = `${API_URL}popular?api_key=${API_KEY}&language=en-US`;
-//     // console.log('endpoint >> ', endpoint)
-
-
-//     fetch(endpoint)
-//     .then(response => response.json())
-//     // .then(response => console.log(response))
-//     .then(response => {
-//       console.log(response.results)
-//       // console.log(response.results[0])
-//       // console.log(response.results[0].poster_path)
-//       setMovies(response.result)
-//       setMainMovieImage(response.results[0])
-//     })
-
-
-//   }, []);
-
-//   return (
-//     <>
-//       <div style= { {width: '100%'} }>
-//         {/* Main Image */} 
-//         {MainMovieImage && 
-//         <MainImage
-//         image={`${IMAGE_BASE_URL}w1280${MainMovieImage.poster_path}`}
-//         title={MainMovieImage.title}
-//         overview={`${MainMovieImage.overview}`}
-//         />
-//         }
-//         <div style= { {width: '85%', margin: '1rem auto'} }>
-
-//           <h2>새로 나온 영화</h2>
-//           <hr />
-
-//           {/* Movie Grid Card */}
-//           <Row>
-//             {Movies.map(movie => {
-//               return(
-//                 <GridCards
-//                 path={`${IMAGE_BASE_URL}w400${movie.poster_path}`}
-//                 title={movie.title}
-//                 />
-//               );
-//             })}
-//           </Row>
-//         </div>
-//         <div style= { {display: 'flex', justifyContent: 'center'} }>
-//           <button> 더보기 </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// export default LandingPage;
-
 import { Button, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AntCard from '../Commons/AntCard';
 import { API_KEY, API_URL, IMAGE_BASE_URL } from '../Config';
 import MainImage from './Section/MainImage';
+import axios from 'axios';
 
 function LandingPage() {
   // useEffect : React에게 컴포넌트가 렌더링 이후에 어떤 일을 수행해야하는 지를 말함
@@ -160,17 +92,28 @@ function LandingPage() {
   function fetchMovies(page) {
     const endpoint = `${API_URL}popular?api_key=${API_KEY}&language=en-US&page=${page}`;
 
-    fetch(endpoint) // 요청
-      .then(res => res.json()) // 응답 : 객체변환
+    // [과제] axios 활용 =============================================================================
+    axios.get(endpoint)
       .then(res => {
-        console.log(res);
-        // 가져온 result를 배열로 저장을 하기 때문에 전개 연산자 ... 를 사용해줘서 풀어준 다음 저장해야된다.
-        // setMovies(res.results);
-        setMovies([...Movies, ...res.results]);
-        setMainMovieImage(res.results[0]);
-        setCurrentPage(res.page);
-        console.log(Movies);
-      });
+        console.log('axios 데이터 > ', res.data);
+        setMovies([...Movies, ...res.data.results]);
+        setMainMovieImage(res.data.results[0]);
+        setCurrentPage(res.data.page);
+      })
+
+    // fetch(endpoint) // 요청
+    //   .then(res => res.json()) // 응답 : 객체변환
+    //   .then(res => {
+    //     console.log(res);
+    //     // 가져온 result를 배열로 저장을 하기 때문에 전개 연산자 ... 를 사용해줘서 풀어준 다음 저장해야된다.
+    //     // setMovies(res.results);
+    //     setMovies([...Movies, ...res.results]);
+    //     setMainMovieImage(res.results[0]);
+    //     setCurrentPage(res.page);
+    //     console.log(Movies);
+    //   });
+
+
   }
 
 
